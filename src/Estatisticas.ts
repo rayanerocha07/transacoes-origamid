@@ -37,31 +37,19 @@ export default class Estatisticas {
   }
 
   private setSemana() {
-    const semana = {
-      ['Domingo']: 0,
-      ['Segunda']: 0,
-      ['Terça']: 0,
-      ['Quarta']: 0,
-      ['Quinta']: 0,
-      ['Sexta']: 0,
-      ['Sábado']: 0,
-    };
-    for (let i = 0; i < this.transacoes.length; i++) {
-      const day = this.transacoes[i].data.getDay();
-      if (day === 0) semana['Domingo'] += 1;
-      if (day === 1) semana['Segunda'] += 1;
-      if (day === 2) semana['Terça'] += 1;
-      if (day === 3) semana['Quarta'] += 1;
-      if (day === 4) semana['Quinta'] += 1;
-      if (day === 5) semana['Sexta'] += 1;
-      if (day === 6) semana['Sábado'] += 1;
-    }
+    const diasDaSemana = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+    const semana: Record<string, number> = {};
+    diasDaSemana.forEach(dia => semana[dia] = 0);
+
+    this.transacoes.forEach(transacao => {
+      const dia = transacao.data.getDay();
+      semana[diasDaSemana[dia]] += 1;
+    });
+
     return semana;
   }
 
-  private setMelhorDia() {
-    return Object.entries(this.semana).sort((a, b) => {
-      return b[1] - a[1];
-    })[0];
+  private setMelhorDia(): [string, number] {
+    return Object.entries(this.semana).sort((a, b) => b[1] - a[1])[0];
   }
 }
